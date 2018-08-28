@@ -1,0 +1,621 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstdlib>
+#include <conio.h>
+#include <iomanip>
+#include<windows.h>
+using namespace std;
+struct student_info
+{
+    string name;
+    int roll;
+    string address;
+
+    struct student_info *next;
+};
+struct student_info *head;
+
+void Insert_Beg(string name, string address,int roll);
+void Insert_nth(string name,string address,int roll,int loc);
+void Insert_End(string name,string address,int roll);
+void Del_Beg();
+void Del_nth(int loc);
+void Del_End();
+void Update_by_Name(string ,string );
+void Update_by_address(string ,string );
+void Update_by_Roll(int a, int b);
+void Search_by_Name(string );
+void Search_by_Roll(int roll);
+void Search_by_address(string );
+int Count();
+void Print();
+
+void Traverse(student_info *head)
+{
+    student_info *temp;
+    temp = head;
+    if(temp==NULL)
+    {
+        cout<<"List is not possible \n\n\n"<<endl;
+    }
+    else
+    {
+        while(temp !=NULL)
+        {
+            cout<<"Name : "<<temp->name<<" "<<"Roll :"<<temp->roll<<" "<<"address: "<<temp->address<<endl;
+            temp= temp->next;
+        }
+    }
+}
+void Insert_Beg(string name,string address,int roll)
+{
+
+    struct student_info *temp;
+    temp=new student_info;
+    temp->name=name;
+    temp->address=address;
+    temp->roll=roll;
+    temp->next=head;
+    head=temp;
+}
+void Insert_nth(string name,string address,int roll,int loc)
+{
+
+    struct student_info *temp1=new student_info;
+
+    temp1->name=name;
+    temp1->address=address;
+    temp1->roll=roll;
+    temp1->next=head;
+
+    if(loc==1)
+    {
+        temp1->next=head;
+        head=temp1;
+        return;
+    }
+
+    struct student_info *temp2=head;
+
+    int i;
+    for(i=0; i<loc-2; i++)
+    {
+        temp2=temp2->next;
+    }
+    temp1->next=temp2->next;
+    temp2->next=temp1;
+
+    return;
+}
+
+void Insert_End(string name,string address,int roll)
+{
+
+    if(head==NULL)
+    {
+        Insert_Beg(name,address,roll);
+        return;
+    }
+    struct student_info *temp;
+    temp=new student_info;
+
+    temp->name=name;
+    temp->address=address;
+    temp->roll=roll;
+    temp->next=NULL;
+
+    struct student_info *temp1=head;
+
+    while(temp1->next!=NULL)
+    {
+        temp1=temp1->next;
+    }
+    temp1->next=temp;
+    return;
+}
+
+void Del_Beg()
+{
+    if(head==NULL)
+    {
+        printf("LIST IS EMPTY\n\n\n");
+        exit(0);
+    }
+
+    struct student_info *temp=head;
+    head =temp->next;
+    free(temp);
+}
+void Del_nth(int loc)
+{
+
+    int i;
+    struct student_info *temp1=head;
+
+    if(loc==1)
+    {
+        head=temp1->next; // head now point to second node
+        free(temp1);//delete  temp1; C++
+        return;
+    }
+
+    for(i=1; i<=loc-2; i++)
+        temp1=temp1->next;// temp1 now points (n-1)th node
+
+    struct student_info *temp2=temp1->next; //points to n th node
+
+    temp1->next=temp2->next;//points to n+1 th node
+
+    free(temp2);//delete  temp2;
+}
+
+void Del_End()
+{
+    struct student_info *temp=head;
+    if(temp==NULL)
+    {
+        printf("\n List is NULL!\n\n\n");
+        exit(0);
+    }
+    if(temp->next==NULL)
+    {
+        head=NULL;
+        free(temp);
+        exit(0);
+    }
+
+    while(temp->next->next!=NULL)
+    {
+        temp=temp->next;
+    }
+    struct student_info *temp2=temp->next->next;
+    temp->next=NULL;
+    free(temp2);
+
+    return;
+}
+void Update_by_Name(string name,string d_name)
+{
+
+    struct student_info *temp=head;
+
+    while(temp!=NULL)
+    {
+        if(temp->name==name)
+        {
+            (temp->name=d_name);
+            break;
+        }
+        temp=temp->next;
+    }
+
+}
+void Update_by_address(string address,string d_address)
+{
+
+    struct student_info *temp=head;
+
+    while(temp!=NULL)
+    {
+        if(temp->address==address)
+        {
+            (temp->address=d_address);
+            break;
+        }
+        temp=temp->next;
+    }
+
+}
+void Update_by_Roll(int roll,int d_roll)
+{
+
+    struct student_info *temp=head;
+
+    while(temp!=NULL)
+    {
+        if(temp->roll==roll)
+        {
+            temp->roll=d_roll;
+            break;
+        }
+        temp=temp->next;
+    }
+
+}
+
+int Count()
+{
+    int count=0;
+    struct student_info *t=head;
+
+    while(t!=NULL)
+    {
+        count++;
+        t=t->next;
+    }
+    return count;
+}
+void Print()
+{
+    struct student_info *t=head;
+    printf(" \n\n\n List is: ");
+    while(t!=NULL)
+    {
+        cout<<"name : "<<t->name;
+        cout<<" address : "<<t->address;
+        printf(" roll : %d ",t->roll);
+        t=t->next;
+    }
+    printf(" \n\n\n ");
+}
+
+void Search_by_Roll(int roll)
+{
+    struct student_info *temp=head;
+    int count=0,flag=0;
+    while(temp!=NULL)
+    {
+
+        count++;
+        if((*temp).roll==roll)
+        {
+            //printf("\n %d Found at %d and name is %s \n",roll,count,(*temp).name);
+            cout<<roll<<"found at"<<" "<<count<<" and name  : "<<(*temp).name<<" "<<" address : "<<(*temp).address;
+            flag=1;
+            break;
+        }
+        temp=temp->next;
+    }
+    if(flag!= 1)
+        printf("\n Not Found \n\n\n");
+
+}
+void Search_by_Name(string name)
+{
+
+    struct student_info *temp=head;
+    int count=0,flag=0;
+    while(temp!=NULL)
+    {
+        count++;
+        if((*temp).name==name)
+        {
+            //printf("\n %d Found at %d and name is %s \n",roll,count,(*temp).name);
+            cout<<name<<"found at "<<" "<<count<<" and roll  : "<<temp->roll<<" "<<" address : "<<(*temp).address;
+            flag=1;
+            break;
+        }
+        temp=temp->next;
+    }
+    if(flag==0)
+        printf("\n Not Found \n\n\n");
+
+}
+
+void Search_by_address(string address)
+{
+
+    struct student_info *temp=head;
+    int count=0,flag=0;
+    while(temp!=NULL)
+    {
+        count++;
+        if((*temp).address==address)
+        {
+            //printf("\n %d Found at %d and name is %s \n",roll,count,(*temp).name);
+            cout<<address<<"found at "<<" "<<count<<" and roll  : "<<temp->roll<<" "<<" name : "<<(*temp).name;//<<temp->roll;
+            flag=1;
+            break;
+        }
+        temp=temp->next;
+    }
+    if(flag==0)
+        printf("\n Not Found \n\n\n");
+
+}
+
+
+void manu1()
+{
+    cout<<"\n                        ****** STUDENT INFORMATION ******"<<"\n\n\n"<<endl;
+    cout<<"Enter Your choice :"<<"\n"<<endl;
+    cout<<"\t\t1.Show student database."<<"\n"<<"\t\t2.Edit the student database."<<"\n"<<"\t\t3.Search a student."<<"\n"<<"\t\t\t(press 20 for exit)"<<endl;
+}
+void manu2()
+{
+    printf("\t\t\t\t *********** EDIT OPTION ***********\n\n\n\n");
+    printf("Please, select from the following: \n\n");
+    printf("\t\t 1. Insert at the beginning: \n");
+    printf("\t\t 2. Insert at the nth Position: \n");
+    printf("\t\t 3. Insert at the Ending:  \n");
+    printf("\t\t 4. Delete from the beginning:  \n");
+    printf("\t\t 5. Delete from the nth Position:  \n");
+    printf("\t\t 6. Delete from the Ending:  \n");
+    printf("\t\t 7. Update by name:  \n");
+    printf("\t\t 8. Update by roll:  \n");
+    printf("\t\t 9. Update by address:  \n");
+    cout<<"\t\t\t\t(Press 20 for exit)\n\n\n";
+    cout<<"\t\t Press 12 for main manu\n\n\n";
+
+
+
+}
+void manu3()
+{
+    printf("\n\t\t\t\t *********** SEARCH OPTION ***********\n\n\n\n");
+    printf("Please, select from the following: \n\n");
+    printf("\t 1. Search by name:  \n");
+    printf("\t 2. Search by roll:  \n");
+    printf("\t 3. Search by address:  \n");
+    cout<<"\t\t\t(Press 20 for exit)\n\n";
+     cout<<"\t\t Press 12 for main manu\n\n\n";
+
+
+}
+
+int main()
+{
+    int i,n,roll,d_roll,choice,loc,count;
+    string address,d_address;
+    string name,d_name;
+    head=NULL;
+
+    do
+    {
+        raihan:
+             manu1();
+             //system("color a");
+        string c;
+        cout<<"Enter your choice :\n";
+//         fflush(stdin);
+//      choice=getche();
+        fflush(stdin);
+        getline(cin, c);
+        choice=atoi(c.c_str());
+
+
+        system("cls");
+
+        if(choice==20){
+
+                system("color b");
+
+                 cout << " THANK YOU FOR USING THIS SOFTWARE\n\n";
+                 cout << "\t\t    DEVELOPED BY RAIHAN \n\n\n";
+            exit(0);
+        }
+
+        switch(choice)
+        {
+        case 1:
+            Traverse(head);
+            break;
+
+        case 2:
+            //system("cls");
+            do
+            {
+
+                manu2();
+                system("color a");
+         string c;
+        cout<<"Enter your choice :\n";
+        fflush(stdin);
+        getline(cin, c);
+        choice=atoi(c.c_str());
+
+
+                system("cls");
+                if(choice==20){
+                    system("color b");
+
+                 cout << " THANK YOU FOR USING THIS SOFTWARE\n\n";
+                 cout << "\t\t    DEVELOPED BY RAIHAN \n\n\n";
+            exit(0);}
+
+                switch(choice)
+                {
+                case 1:
+                    cout<<"\n Enter your name: ";
+                    fflush(stdin);
+                    getline(cin,name);
+
+                    cout<<"\n Enter your address: ";
+                    fflush(stdin);
+                    getline(cin,address);
+                    cout<<"\n Enter the roll: ";
+                    scanf("%d",&roll);
+                    Insert_Beg(name,address,roll);
+                    Print();
+                    break;
+
+                case 2:
+                    if(head==NULL)
+                        Insert_Beg(name,address,roll);
+                    else
+                    {
+                        cout<<"\n Enter the Location: ";
+                        scanf("%d",&loc);
+                        cout<<"\n Enter the name: ";
+                         fflush(stdin);
+                    getline(cin,name);
+
+                        cout<<"\n Enter your address: ";
+                        fflush(stdin);
+                        getline(cin,address);
+                        cout<<"\n Enter the roll: ";
+                        cin>>roll;
+                        Insert_nth(name,address,roll,loc);
+                    }
+                    Print();
+                    break;
+
+                case 3:
+                    cout<<"\n Enter the name: ";
+                fflush(stdin);
+                    getline(cin,name);
+                    cout << "Enter your address: ";
+                    fflush(stdin);
+                    getline(cin,address);
+                    printf("\n Enter the roll: ");
+                    scanf("%d",&roll);
+                    Insert_End(name,address,roll);
+                    Print();
+                    break;
+
+                case 4:
+                    Del_Beg();
+                    Print();
+                    break;
+
+                case 5:
+
+                    printf("\n Enter the Location: ");
+                    scanf("%d",&loc);
+
+                    count=Count();
+
+                    if(loc >=1 && loc <= count)
+                        Del_nth(loc);
+                    else
+                    {
+
+                        printf("\n WARNING!! Invalid Location\a\n please enter right location\n\n\n");
+
+                    }
+                    Print();
+                    break;
+
+                case 6:
+                    Del_End();
+                    Print();
+                    break;
+                case 7:
+                    printf("\n Enter the name: ");
+                    fflush(stdin);
+                    getline(cin,name);
+                    printf("\n Enter the desire name: ");
+                    fflush(stdin);
+                    getline(cin,d_name);
+                    Update_by_Name(name,d_name);
+                    Print();
+                    break;
+                case 8:
+                    printf("\n Enter the roll: ");
+                    scanf("%d",&roll);
+                    printf("\n Enter the desire roll: ");
+                    scanf("%d",&d_roll);
+                    Update_by_Roll(roll,d_roll);
+                    Print();
+                    break;
+
+                    case 9:
+                    printf("\n Enter the address: ");
+                    fflush(stdin);
+                    getline(cin,address);
+                    printf("\n Enter the desire address: ");
+                    fflush(stdin);
+                    getline(cin,d_address);
+                    Update_by_address(address,d_address);
+                    Print();
+                    break;
+
+
+
+                    break;
+                       case 12:
+                    goto raihan;
+                    break;
+
+                default:
+
+                    printf("WARNING!YOU HAVE ENTERED THE WRONG \a \n Please choose a number from bellow.....\n");
+               system("color c");;
+                    //exit(0);
+                    break;
+                }
+
+
+            }
+            while(1);
+
+
+
+        case 3:
+            do
+            {
+                system("color e");
+                manu3();
+                  string c;
+        cout<<"Enter your choice :\n";
+        getline(cin, c);
+        choice=atoi(c.c_str());
+
+
+                system("cls");
+                if(choice==20){
+                        system("color b");
+
+                 cout << " THANK YOU FOR USING THIS SOFTWARE\n\n";
+                 cout << "\t\t    DEVELOPED BY RAIHAN \n\n\n";
+            exit(0);}
+                system("cls");
+                switch(choice)
+                {
+                case 1:
+                    cout<<"\n Enter your name :";
+                    fflush(stdin);
+                    getline(cin,name);
+                    Search_by_Name(name);
+                    break;
+                case 2:
+                    cout<<"\n Enter your roll:";
+                    cin>>roll;
+                    fflush(stdin);
+                    Search_by_Roll(roll);
+                    break;
+                case 3:
+                    cout<<"\n Enter your address :";
+                    fflush(stdin);
+                    getline(cin,address);
+                    Search_by_address(address);
+
+                    break;
+                case 12:
+                    goto raihan;
+                    break;
+
+                default:
+                    printf("WARNING!YOU HAVE ENTERED THE WRONG \a \n Please choose a number from bellow.....\n");
+               system("color c");
+                    break;
+                }
+
+            }
+            while(1);
+
+
+        default:
+
+            //cout<<"Invalid choice";
+            printf("WARNING!YOU HAVE ENTERED THE WRONG \a \n Please choose a number from bellow.....\n");
+               system("color c");
+
+            cout<<"\n\n";
+
+            //manu1();
+
+
+            break;
+            //exit(0);
+        }
+        //cout<<"Enter your choice : ";
+            //getline(cin,c);
+            //choice=atoi(c.c_str());
+    }
+    while(1);
+
+
+    return 0;
+}
